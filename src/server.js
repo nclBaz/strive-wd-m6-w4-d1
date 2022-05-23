@@ -3,15 +3,20 @@ import listEndpoints from "express-list-endpoints"
 import mongoose from "mongoose"
 import createError from "http-errors"
 import cors from "cors"
+import passport from "passport"
+import expressSession from "express-session"
 import usersRouter from "./services/users/index.js"
 import booksRouter from "./services/books/index.js"
 import authorsRouter from "./services/authors/index.js"
 import filesRouter from "./services/files/index.js"
 import { badRequestHandler, unauthorizedHandler, forbiddenHandler, notFoundHandler, genericErrorHandler } from "./errorsHandlers.js"
+import googleStrategy from "./lib/auth/googleOAuth.js"
 
 const server = express()
 
 const port = 3001
+
+passport.use("google", googleStrategy)
 
 // *************************** MIDDLEWARES **************************************************
 
@@ -35,6 +40,8 @@ server.use(cors()) // YOU NEED THIS TO CONNECT YOUR FE TO THIS BE
 server.use(loggerMiddleware)
 // server.use(policeOfficerMiddleware)
 server.use(express.json()) // if you don't add this line BEFORE the endpoints, all requests' bodies will be UNDEFINED
+server.use(passport.initialize())
+server.use(expressSession({ secret: "mysupersecret" }))
 
 // ************************ ENDPOINTS *******************
 

@@ -8,6 +8,7 @@
 
 import express from "express"
 import createError from "http-errors"
+import passport from "passport"
 import UsersModel from "./model.js"
 import { checkUserMiddleware, checkValidationResult } from "./validation.js"
 import BooksModel from "../books/model.js"
@@ -53,7 +54,7 @@ usersRouter.post("/login", async (req, res, next) => {
 
       // 4. Send token as a response
 
-      res.send({ accessToken: token })
+      res.redirect(`${process.env.FE_URL}/googleRedirect?accessToken=${token}`)
     } else {
       // 401
 
@@ -87,6 +88,17 @@ usersRouter.get("/me", JWTAuthMiddleware, async (req, res, next) => {
 usersRouter.put("/me", JWTAuthMiddleware, async (req, res, next) => {})
 
 usersRouter.delete("/me", JWTAuthMiddleware, async (req, res, next) => {})
+
+usersRouter.get("/googleLogin", passport.authenticate("google", { scope: ["profile", "email"] }))
+
+usersRouter.get("/googleRedirect", passport.authenticate("google"), async (req, res, next) => {
+  // this URL needs to match EXACTLY the one configured on google.com
+  try {
+    res.redirect(`${process.env.FE_URL}/users?accessToken=${req.user.token}`)
+  } catch (error) {
+    next(error)
+  }
+})
 
 // 3.
 usersRouter.get("/:userId", JWTAuthMiddleware, adminOnlyMiddleware, async (req, res, next) => {

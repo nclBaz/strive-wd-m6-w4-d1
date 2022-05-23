@@ -13,10 +13,11 @@ const usersSchema = new Schema(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true },
-    dateOfBirth: { type: Date, required: true },
-    password: { type: String, required: true },
+    dateOfBirth: { type: Date, required: false },
+    password: { type: String, required: false },
     purchaseHistory: [{ title: String, category: String, price: Number, purchaseDate: Date }],
     role: { type: String, required: true, default: "User", enum: ["User", "Admin"] },
+    googleId: { type: String, required: false },
   },
   {
     timestamps: true, // automatically add createdAt and updatedAt fields
