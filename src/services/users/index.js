@@ -91,7 +91,7 @@ usersRouter.delete("/me", JWTAuthMiddleware, async (req, res, next) => {})
 
 usersRouter.get("/googleLogin", passport.authenticate("google", { scope: ["profile", "email"] }))
 
-usersRouter.get("/googleRedirect", passport.authenticate("google"), async (req, res, next) => {
+usersRouter.get("/googleRedirect", passport.authenticate("google", { session: false }), async (req, res, next) => {
   // this URL needs to match EXACTLY the one configured on google.com
   try {
     res.redirect(`${process.env.FE_URL}/users?accessToken=${req.user.token}`)

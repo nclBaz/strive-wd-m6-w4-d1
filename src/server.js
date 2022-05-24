@@ -4,7 +4,6 @@ import mongoose from "mongoose"
 import createError from "http-errors"
 import cors from "cors"
 import passport from "passport"
-import expressSession from "express-session"
 import usersRouter from "./services/users/index.js"
 import booksRouter from "./services/books/index.js"
 import authorsRouter from "./services/authors/index.js"
@@ -41,7 +40,6 @@ server.use(loggerMiddleware)
 // server.use(policeOfficerMiddleware)
 server.use(express.json()) // if you don't add this line BEFORE the endpoints, all requests' bodies will be UNDEFINED
 server.use(passport.initialize())
-server.use(expressSession({ secret: "mysupersecret" }))
 
 // ************************ ENDPOINTS *******************
 
